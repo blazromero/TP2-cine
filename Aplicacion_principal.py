@@ -31,7 +31,7 @@ API: dict = {
     'HEADERS': { 'Authorization': f'Bearer {TOKEN}'}
 }
 
-def mostrar_ventana_secundaria(totem)-> None:
+def mostrar_ventana_secundaria()-> None:
     ventana_secundaria = Tk()
     ventana_secundaria.geometry('400x800')
     ventana_secundaria.title('Pelicula')
@@ -61,12 +61,41 @@ def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     lbl_espacios3 = Label(text='sa', bg= 'black')
     lbl_espacios3.grid(row=6, column=0)
     
-    
+    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_1.grid(row= 3, column= 2,pady= 5, padx= 5)
+
+    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_2.grid(row= 4, column= 2,pady= 5, padx= 5)
+
+    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_3.grid(row= 5, column= 3,pady= 5, padx= 5)
+
+    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_4.grid(row= 6, column= 3, pady= 5, padx= 5)
+
+    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_5.grid(row= 3, column= 3,pady= 5, padx= 5)
+
+    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_6.grid(row= 4, column= 3,pady= 5, padx= 5)
+
+    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_7.grid(row= 5, column= 2,pady= 5, padx= 5)
+
+    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_8.grid(row= 6, column= 2, pady= 5, padx= 5)
+
+    boton_buscar: Button = Button(text='buscar', height= 1, width=6)
+    boton_buscar.grid(row=1, column=3)
+
+    boton_buscar: Button = Button(text='Finalizar Compra', height= 1, width=15)
+    boton_buscar.grid(row=1, column=4)
+
 
     lbl_aclaracion: Label = Label(pantalla_principal, text=ACLARACION_FUNCIONES_PELICULAS, wraplength=200, bg='CadetBlue', font=ACLARACION_FONT)
-    lbl_aclaracion.grid(row=2, column=3, columnspan=2, sticky='news', pady=20)
-    entrada_usuario = Entry(pantalla_principal, width= 34)
-    entrada_usuario.grid(row=1, column=3)
+    lbl_aclaracion.grid(row=2, column=2, columnspan=2, sticky='news', pady=20)
+    entrada_usuario = Entry(pantalla_principal, width= 25)
+    entrada_usuario.grid(row=1, column=2)
 
     
 
