@@ -1,11 +1,9 @@
-from tkinter import Tk, Entry, Button, Label, Frame, LabelFramer
+from tkinter import Tk, Toplevel, Entry, Button, Label, Frame,  LabelFrame
 import requests
-import qrcode
-import os
-import datetime
-from PIL import Image, ImageTk
+from PIL import Image
 import base64
 import io
+
 
 CARPETA_CODIGOS_QR: str = 'QR'
 ACLARACION_FUNCIONES_PELICULAS: str = 'Cada cine tiene sala unica. Cada pelicula se proyectara en la misma sala pero distintas horas y dias para evitar superposicion.'
@@ -40,6 +38,9 @@ def mostrar_ventana_secundaria(totem)-> None:
     ventana_secundaria.config(bg= 'black')
 
     ventana_secundaria.mainloop()
+
+
+
 def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     pantalla_principal = pantalla_principal
 
@@ -68,6 +69,7 @@ def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     entrada_usuario.grid(row=1, column=3)
 
     
+
 def cargar_snacks(totem: dict) -> None:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
@@ -117,6 +119,70 @@ def cargar_cines(totem: dict) -> None:
                 CINES_INFO[cine_id] = cine | proyecciones[0]
 
         totem['CINES_INFO'] = CINES_INFO
+
+
+
+def cargar_cartelera(totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se actualiza el estado de cartelera_info, cargandolo con los datos obtenidos de la API dada.
+    '''
+    cartelera_info: dict = {}
+
+    try:
+        request_todas_las_pelis: list = requests.get(API['BASE_URL'] + API['PATH']['TODAS_LAS_PELIS'], headers=API['HEADERS'])
+    except Exception as e:
+        print('Error al consultar API request_todas_las_pelis', str(e))
+
+    if request_todas_las_pelis.status_code == 200:
+        peliculas: list = request_todas_las_pelis.json()
+
+        for pelicula in peliculas:
+            peli_desc: dict = {}
+            poster: dict = {}
+            movie_id: str = pelicula['movie_id']
+            poster_id: str = pelicula['poster_id']
+            
+            request_url_peli_desc: str = (API['BASE_URL'] + API['PATH']['PELI_POR_ID']).replace('{movie_id}', movie_id)
+
+            try:
+                request_peli_desc: list = requests.get(request_url_peli_desc, headers=API['HEADERS'])
+            except Exception as e:
+                print('Error al consultar API request_url_peli_desc', str(e))
+
+            if request_peli_desc.status_code == 200:
+                peli_desc = request_peli_desc.json()
+            
+            request_url_peli_poster: str = (API['BASE_URL'] + API['PATH']['POSTER_POR_ID']).replace('{poster_id}', poster_id)
+
+            try:
+                request_peli_poster: list = requests.get(request_url_peli_poster, headers=API['HEADERS'])
+            except Exception as e:
+                print('Error al consultar API request_url_peli_poster', str(e))
+
+            if request_peli_poster.status_code == 200:
+                poster = request_peli_poster.json()
+                
+                poster_image: str = poster['poster_image']
+                poster_image: str = poster_image.split('base64,')[1]
+                poster['poster_image'] = base64.b64decode(poster_image)
+                poster['poster_image'] = Image.open(io.BytesIO(poster['poster_image']))
+
+            request_url_peli_cinemas: str = (API['BASE_URL'] + API['PATH']['DONDE_SE_PROYECTA']).replace('{movie_id}', movie_id)
+
+            try:
+                request_peli_cinemas: list = requests.get(request_url_peli_cinemas, headers=API['HEADERS'])
+            except Exception as e:
+                print('Error al consultar API request_url_peli_cinemas', str(e))
+
+            if request_peli_cinemas.status_code == 200:
+                cinemas = request_peli_cinemas.json()
+
+            cartelera_info[movie_id] = pelicula | peli_desc | poster
+            cartelera_info[movie_id]['cinemas'] = cinemas
+
+    
+    totem['CARTELERA_INFO'] = cartelera_info
 
 
 
