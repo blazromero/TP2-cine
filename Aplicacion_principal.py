@@ -1,5 +1,11 @@
 from tkinter import Tk, Entry, Button, Label, Frame, LabelFramer
 import requests
+import qrcode
+import os
+import datetime
+from PIL import Image, ImageTk
+import base64
+import io
 
 CARPETA_CODIGOS_QR: str = 'QR'
 ACLARACION_FUNCIONES_PELICULAS: str = 'Cada cine tiene sala unica. Cada pelicula se proyectara en la misma sala pero distintas horas y dias para evitar superposicion.'
@@ -78,6 +84,40 @@ def cargar_snacks(totem: dict) -> None:
         snacks = request_todos_los_snakcs.json()
 
     totem['SNACKS'] = snacks
+
+
+
+def cargar_cines(totem: dict) -> None: 
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se actualiza el estado de cines_info, cargandolo con los datos obtenidos de la API dada.
+    '''
+    CINES_INFO: dict = {}
+
+    try:
+        request_todos_los_cines = requests.get(API['BASE_URL'] + API['PATH']['TODOS_LOS_CINES'], headers=API['HEADERS'])
+    except Exception as e:
+        print('Error al consultar API todos_los_cines', str(e))
+
+    if request_todos_los_cines.status_code == 200:
+        cines: list = request_todos_los_cines.json()
+
+        for cine in cines:
+            cine_id: str = cine['cinema_id']
+            request_url = (API['BASE_URL'] + API['PATH']['TODAS_LAS_PELIS_DEL_CINE']).replace('{cinema_id}', cine_id)
+
+            try:
+                request_todas_proyecciones_cine = requests.get(request_url, headers=API['HEADERS'])                
+            except Exception as e:
+                print('Error al consultar API request_todas_proyecciones_cine', str(e))
+
+            if request_todas_proyecciones_cine.status_code == 200:
+                proyecciones: list = request_todas_proyecciones_cine.json()
+
+                CINES_INFO[cine_id] = cine | proyecciones[0]
+
+        totem['CINES_INFO'] = CINES_INFO
+
 
 
 
