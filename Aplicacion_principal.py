@@ -30,6 +30,65 @@ API: dict = {
     },
     'HEADERS': { 'Authorization': f'Bearer {TOKEN}'}
 }
+def mostrar_snacks(lblframe_snacks: LabelFrame, totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se pintan en pantalla el listado de snacks con nombre, cantidad y el boton para agregar al carrito.
+    '''
+    snacks = totem['SNACKS']
+
+    i: int = 0
+    for snack in snacks:
+        texto_snack: str = f'{snack} ${snacks[snack]}'.title().replace('_', ' ')
+
+        lbl_snack: Label = Label(lblframe_snacks, text = texto_snack) 
+        lbl_snack.grid(row=i, column=0)
+        
+        spin_cantidad_snacks = Spinbox(lblframe_snacks, from_=0, to=MAX_SNACKS, validate='key', width=5)
+        spin_cantidad_snacks['validatecommand'] = (spin_cantidad_snacks.register(isNumber), '%P')
+        spin_cantidad_snacks.config(command= lambda spin_cantidad_snacks=spin_cantidad_snacks: spinbox_fondo_blanco(spin_cantidad_snacks))
+        spin_cantidad_snacks.grid(row=i,column=1)
+        
+        btn_agregar_al_carrito: Button = Button(lblframe_snacks, text='Agregar al carrito', command= lambda snack=snack, spin_cantidad_snacks=spin_cantidad_snacks: agregar_al_carrito(totem=totem, snack=snack, spin_cantidad_snacks=spin_cantidad_snacks))
+        btn_agregar_al_carrito.grid(row=i, column=2)
+
+        i += 1
+
+def hay_asientos_disponibles(cantidad_entradas: int, totem: dict) -> bool:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Devolvera un bool con valor True indicado que aun hay asientos disponibles, False en caso contrario.
+    '''
+    cine_info:dict = totem['CINES_INFO']
+    ubicacion:str = totem['ubicacion']
+    
+    compra = totem['compra']
+    nombre_pelicula: str = compra['pelicula']
+    lugares_disponibles:dict = totem['lugares_disponibles']
+
+    lugar_disponible_key:str = f'{ubicacion}_{nombre_pelicula}'
+
+    if lugar_disponible_key in lugares_disponibles:
+        asientos_vacios: int = int(lugares_disponibles[lugar_disponible_key])
+
+        if asientos_vacios < cantidad_entradas:
+            return False
+        else:
+            compra['ubicacion_key'] = lugar_disponible_key
+    else:
+        cine_id: str = obtener_id_cinema(ubicacion, totem)
+        lugares_disponibles[lugar_disponible_key] = int(cine_info[cine_id]['available_seats'])
+        compra['ubicacion_key'] = lugar_disponible_key
+
+    return True
+
+
+def spinbox_fondo_blanco(spin_box: Spinbox) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Pinta de blanco el fondo del SpinBox.
+    '''  
+    spin_box['bg'] = 'white'
 
 def mostrar_ventana_secundaria()-> None:
     ventana_secundaria = Tk()
