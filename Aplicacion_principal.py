@@ -1,4 +1,4 @@
-from tkinter import Tk, Toplevel, Entry, Button, Label, Frame,  LabelFrame
+from tkinter import Tk, Toplevel, Entry, Button, Label, Frame,  LabelFrame, Spinbox
 import requests
 from PIL import Image
 import base64
@@ -54,6 +54,8 @@ def mostrar_snacks(lblframe_snacks: LabelFrame, totem: dict) -> None:
 
         i += 1
 
+
+
 def hay_asientos_disponibles(cantidad_entradas: int, totem: dict) -> bool:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
@@ -83,6 +85,16 @@ def hay_asientos_disponibles(cantidad_entradas: int, totem: dict) -> bool:
     return True
 
 
+
+def isNumber(age_spinbox: Spinbox) -> bool:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Devolvemos un bool para decir si la cadena es un numero, True en caso afirmativo, False en caso contrario.
+    '''
+    return age_spinbox.isdigit() 
+
+
+
 def spinbox_fondo_blanco(spin_box: Spinbox) -> None:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
@@ -90,13 +102,60 @@ def spinbox_fondo_blanco(spin_box: Spinbox) -> None:
     '''  
     spin_box['bg'] = 'white'
 
-def mostrar_ventana_secundaria()-> None:
-    ventana_secundaria = Tk()
+def mostrar_ventana_reserva(ventana_secundaria) ->None:
+    ventana_secundaria.withdraw()
+
+    ventana_reserva= Toplevel()
+    ventana_reserva.geometry('400x400')
+    ventana_reserva.config(bg='black')
+
+    lbl_cantidad_entradas:Label = Label(ventana_reserva, text= 'Cantidad de entradas: ')
+    lbl_cantidad_entradas.grid(row=0, column=0)
+
+    
+
+
+def mostrar_ventana_secundaria(ventana_principal)-> None:
+    ventana_principal.withdraw()
+    ventana_secundaria = Toplevel()
     ventana_secundaria.geometry('400x800')
     ventana_secundaria.title('Pelicula')
-    ventana_secundaria.config(bg= 'black')
+    ventana_secundaria.config(bg='black')
 
-    ventana_secundaria.mainloop()
+
+    lblframe_nombre_peli: LabelFrame = LabelFrame(ventana_secundaria, text='Pelicula:', bg='black', fg='white')
+    lblframe_nombre_peli.pack(pady=20)
+    
+    lbl_nombre_peli: Label = Label(lblframe_nombre_peli, text='pelicula', bg='black', fg='white')
+    lbl_nombre_peli.pack()
+
+    lblframe_synopsis: LabelFrame = LabelFrame(ventana_secundaria, text='Synopsis:', bg='black', fg='white')
+    lblframe_synopsis.pack(pady=20)
+
+    lbl_synopsis: Label = Label(lblframe_synopsis, text='synopsis', wraplength=200, bg='black', fg='white')
+    lbl_synopsis.pack()
+
+    lblframe_actores: LabelFrame = LabelFrame(ventana_secundaria, text='Actores:', bg='black', fg='white')
+    lblframe_actores.pack(pady=20)
+
+    lbl_actores: Label = Label(lblframe_actores, text='actores', wraplength=200, bg='black', fg='white')
+    lbl_actores.pack()
+
+    lblframe_genero: LabelFrame = LabelFrame(ventana_secundaria, text='Genero:', bg='black', fg='white')
+    lblframe_genero.pack(pady=20)
+
+    lbl_genero: Label = Label(lblframe_genero, text='genero', bg='black', fg='white')
+    lbl_genero.pack()
+
+    lblframe_duracion: LabelFrame = LabelFrame(ventana_secundaria, text='Duracion:', bg='black', fg='white')
+    lblframe_duracion.pack(pady=20)
+
+    lbl_duracion: Label = Label(lblframe_duracion, text='duracion', bg='black', fg='white')
+    lbl_duracion.pack()
+
+    btn_reserva = Button(ventana_secundaria, text= 'Reservar')
+    btn_reserva.pack()
+
 
 
 
@@ -120,28 +179,28 @@ def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     lbl_espacios3 = Label(text='sa', bg= 'black')
     lbl_espacios3.grid(row=6, column=0)
     
-    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_1.grid(row= 3, column= 2,pady= 5, padx= 5)
 
-    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_2.grid(row= 4, column= 2,pady= 5, padx= 5)
 
-    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_3.grid(row= 5, column= 3,pady= 5, padx= 5)
 
-    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_4.grid(row= 6, column= 3, pady= 5, padx= 5)
 
-    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_5.grid(row= 3, column= 3,pady= 5, padx= 5)
 
-    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_6.grid(row= 4, column= 3,pady= 5, padx= 5)
 
-    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_7.grid(row= 5, column= 2,pady= 5, padx= 5)
 
-    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(), height= 20 , width= 25)
+    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
     boton_8.grid(row= 6, column= 2, pady= 5, padx= 5)
 
     boton_buscar: Button = Button(text='buscar', height= 1, width=6)
