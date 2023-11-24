@@ -1,11 +1,35 @@
 from tkinter import Tk, Entry, Button, Label, LabelFrame
+import os
 
 CARPETA_CODIGOS_QR = 'QR'
 ARCHIVO_INGRESOS = 'ingresos.txt'
 
 
+def obtener_id_qr(cadena: str) -> str:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se devolvera una cadena la cual es el id del qr.
+    '''
+    return cadena.split(',')[0].replace('id_qr: ', '')
+
 def cargar_ingresos() -> list[str]:
-    pass
+    '''
+    PRE: Sin parametros de entrada.
+    POST: Se devolvera una lista de string los ingresos guardados en el archivo ingesos.txt. Si el archivo no existe, se creara.
+    '''
+    ingresados: list[str] = []
+
+    if os.path.exists(ARCHIVO_INGRESOS):
+        
+        with open(ARCHIVO_INGRESOS, 'r') as archivo:
+            for linea in archivo:
+                ingresados.append(obtener_id_qr(linea))
+    else:
+
+        with open(ARCHIVO_INGRESOS, 'a') as archivo:
+            pass
+
+    return ingresados
 
 def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str]) -> None:
     pass
