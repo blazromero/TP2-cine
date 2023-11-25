@@ -95,73 +95,74 @@ def isNumber(age_spinbox: Spinbox) -> bool:
 
 
 
-def spinbox_fondo_blanco(spin_box: Spinbox) -> None:
-    '''
-    PRE: Se esperan los parametros solicitado de forma correcta.
-    POST: Pinta de blanco el fondo del SpinBox.
-    '''  
-    spin_box['bg'] = 'white'
+def mostrar_pantalla_reserva(pantalla_secundaria, totem) ->None:
+    pantalla_secundaria.withdraw()
 
-def mostrar_ventana_reserva(ventana_secundaria) ->None:
-    ventana_secundaria.withdraw()
+    pantalla_reserva= Toplevel()
+    pantalla_reserva.geometry('400x400')
+    pantalla_reserva.config(bg='black')
 
-    ventana_reserva= Toplevel()
-    ventana_reserva.geometry('400x400')
-    ventana_reserva.config(bg='black')
-
-    lbl_cantidad_entradas:Label = Label(ventana_reserva, text= 'Cantidad de entradas: ')
+    lbl_cantidad_entradas:Label = Label(pantalla_reserva, text= 'Cantidad de entradas: ', bg='black', fg='white')
     lbl_cantidad_entradas.grid(row=0, column=0)
 
+    bnt_listo: Button = Button(pantalla_reserva, text='Listo!', bg='green', command= lambda: volver_a_pantalla_secundaria(pantalla_reserva, totem))
+    bnt_listo.grid(column=1)
+
+
+
+def mostrar_pantalla_secundaria(totem)-> None:
+
+    pantalla_principal = totem['ventanas']['pantalla_principal'] 
+    pantalla_principal.withdraw()
+
+    pantalla_secundaria = Toplevel()
+    pantalla_secundaria.geometry('400x800')
+    pantalla_secundaria.title('Pelicula')
+    pantalla_secundaria.config(bg='black')
+
+    totem['ventanas']['pantalla_secundaria'] = pantalla_secundaria
     
-
-
-def mostrar_ventana_secundaria(ventana_principal)-> None:
-    ventana_principal.withdraw()
-    ventana_secundaria = Toplevel()
-    ventana_secundaria.geometry('400x800')
-    ventana_secundaria.title('Pelicula')
-    ventana_secundaria.config(bg='black')
-
-
-    lblframe_nombre_peli: LabelFrame = LabelFrame(ventana_secundaria, text='Pelicula:', bg='black', fg='white')
+    lblframe_nombre_peli: LabelFrame = LabelFrame(pantalla_secundaria, text='Pelicula:', bg='black', fg='white')
     lblframe_nombre_peli.pack(pady=20)
     
     lbl_nombre_peli: Label = Label(lblframe_nombre_peli, text='pelicula', bg='black', fg='white')
     lbl_nombre_peli.pack()
 
-    lblframe_synopsis: LabelFrame = LabelFrame(ventana_secundaria, text='Synopsis:', bg='black', fg='white')
+    lblframe_synopsis: LabelFrame = LabelFrame(pantalla_secundaria, text='Synopsis:', bg='black', fg='white')
     lblframe_synopsis.pack(pady=20)
 
     lbl_synopsis: Label = Label(lblframe_synopsis, text='synopsis', wraplength=200, bg='black', fg='white')
     lbl_synopsis.pack()
 
-    lblframe_actores: LabelFrame = LabelFrame(ventana_secundaria, text='Actores:', bg='black', fg='white')
+    lblframe_actores: LabelFrame = LabelFrame(pantalla_secundaria, text='Actores:', bg='black', fg='white')
     lblframe_actores.pack(pady=20)
 
     lbl_actores: Label = Label(lblframe_actores, text='actores', wraplength=200, bg='black', fg='white')
     lbl_actores.pack()
 
-    lblframe_genero: LabelFrame = LabelFrame(ventana_secundaria, text='Genero:', bg='black', fg='white')
+    lblframe_genero: LabelFrame = LabelFrame(pantalla_secundaria, text='Genero:', bg='black', fg='white')
     lblframe_genero.pack(pady=20)
 
     lbl_genero: Label = Label(lblframe_genero, text='genero', bg='black', fg='white')
     lbl_genero.pack()
 
-    lblframe_duracion: LabelFrame = LabelFrame(ventana_secundaria, text='Duracion:', bg='black', fg='white')
+    lblframe_duracion: LabelFrame = LabelFrame(pantalla_secundaria, text='Duracion:', bg='black', fg='white')
     lblframe_duracion.pack(pady=20)
 
     lbl_duracion: Label = Label(lblframe_duracion, text='duracion', bg='black', fg='white')
     lbl_duracion.pack()
 
-    btn_reserva = Button(ventana_secundaria, text= 'Reservar')
+    btn_reserva = Button(pantalla_secundaria, text= 'Reservar')
     btn_reserva.pack()
 
+    btn_volver: Button = Button(pantalla_secundaria, text='Volver a pantalla principal', command= lambda:volver_a_principal(pantalla_secundaria, totem))
+    btn_volver.pack()
 
 
 
-def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
-    pantalla_principal = pantalla_principal
-
+def diseño_pantalla_principal(totem)-> dict:
+    
+    pantalla_principal = totem['ventanas']['pantalla_principal']
     
     lbl_cines = Label(text = 'Cine : ', bg= 'black', fg= 'white' )
     lbl_cines.grid(row=0, column=1)
@@ -179,28 +180,28 @@ def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     lbl_espacios3 = Label(text='sa', bg= 'black')
     lbl_espacios3.grid(row=6, column=0)
     
-    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_1.grid(row= 3, column= 2,pady= 5, padx= 5)
 
-    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_2.grid(row= 4, column= 2,pady= 5, padx= 5)
 
-    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_3.grid(row= 5, column= 3,pady= 5, padx= 5)
 
-    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_4.grid(row= 6, column= 3, pady= 5, padx= 5)
 
-    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_5.grid(row= 3, column= 3,pady= 5, padx= 5)
 
-    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_6.grid(row= 4, column= 3,pady= 5, padx= 5)
 
-    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_7.grid(row= 5, column= 2,pady= 5, padx= 5)
 
-    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_ventana_secundaria(pantalla_principal), height= 20 , width= 25)
+    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(pantalla_principal, totem), height= 20 , width= 25)
     boton_8.grid(row= 6, column= 2, pady= 5, padx= 5)
 
     boton_buscar: Button = Button(text='buscar', height= 1, width=6)
@@ -216,6 +217,24 @@ def diseño_pantalla_principal(pantalla_principal, totem)-> dict:
     entrada_usuario.grid(row=1, column=2)
 
     
+
+def obtener_id_cinema(ubicacion_cine_elegido: str, totem: dict) -> str:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: En caso de ser encontrado devolvera una cadena con el id de la ubicacion del cine, sino esta sera vacia.
+    '''
+    cines: dict = totem['CINES_INFO']
+    id_cine_encontrado: str = ''
+
+    for cine_id, cine_info in cines.items():
+        ubicacion: str = cine_info['location']
+        
+        if ubicacion_cine_elegido == ubicacion:
+            id_cine_encontrado = cine_id
+
+    return id_cine_encontrado
+
+
 
 def cargar_snacks(totem: dict) -> None:
     '''
@@ -333,10 +352,86 @@ def cargar_cartelera(totem: dict) -> None:
 
 
 
+def inicializar_totem(totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se incializara el estado del totem, creando y cargando con los datos necesarios para la aplicacion.
+    '''
+    totem['ventanas']: dict = {}
+    
+    totem['compra']: dict = {
+        'cantidad_entradas': 0,
+        'snacks': {},
+        'ubicacion_key': ''
+    }
+
+    totem['precio_entradas_general']: float = PRECIO_ENTRADAS_GENERAL
+    totem['ubicacion']: str = ''
+
+    totem['CARTELERA_INFO']: dict = {}
+    totem['CINES_INFO']: dict = {}
+    totem['SNACKS']: dict = {}
+    totem['lugares_disponibles']: dict = {}
+
+    cargar_cartelera(totem)
+    cargar_cines(totem)
+    cargar_snacks(totem)
 
 
 
+def obtener_pelis_de_cinema(cine_elegido: str, totem: dict) -> list[dict]:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se devolvera una lista de diccionarios, las cuales son las peliculas del cine/ubicacion elegido.
+    '''
+    cines: dict = totem['CINES_INFO']
+    peliculas: dict = totem['CARTELERA_INFO']
 
+    encontrado: bool = False
+    
+    peliculas_del_cine: list[dict] = []
+    cinema_id: str = ''
+
+    for cine_id, info in cines.items():
+        if not encontrado:
+            if info['location'] == cine_elegido:
+                cinema_id = str(info['cinema_id'])
+                encontrado = True
+
+    for pelicula_id, pelicula_info in peliculas.items():
+        if cinema_id in pelicula_info['cinemas']:
+            peliculas_del_cine.append(pelicula_info)
+
+    return peliculas_del_cine
+
+
+
+def volver_a_principal(pantalla_actual, totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Escondemos la pantalla actual y mostramos la pantalla principal.
+    '''
+    pantalla_actual.withdraw()
+
+    pantalla_principal = totem['ventanas']['pantalla_principal']
+
+    pantalla_principal.deiconify()
+
+
+
+def volver_a_pantalla_secundaria(pantalla_actual, totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Escondemos la pantalla actual y mostramos la pantalla secundaria.
+    '''
+    pantalla_actual.withdraw()
+
+    pantalla_secundaria = totem['ventanas']['pantalla_secundaria']
+
+    bnt_listo: Button = Button(pantalla_secundaria, text='Listo!', bg='green', command= lambda: volver_a_principal(pantalla_secundaria, totem))
+    bnt_listo.pack()
+
+    pantalla_secundaria.deiconify()
 
 
 
@@ -348,8 +443,11 @@ def main() -> None:
     pantalla_principal.title('Pantalla Principal')
     pantalla_principal.config(bg = 'black')
 
-    diseño_pantalla_principal(pantalla_principal, totem)
+    totem['ventanas']['pantalla_principal'] = pantalla_principal
+
+    diseño_pantalla_principal(totem)
     
+
     pantalla_principal.mainloop()
 
 
