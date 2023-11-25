@@ -1,5 +1,6 @@
 from tkinter import Tk, Entry, Button, Label, LabelFrame
 import os
+import cv2
 
 CARPETA_CODIGOS_QR = 'QR'
 ARCHIVO_INGRESOS = 'ingresos.txt'
@@ -34,8 +35,46 @@ def cargar_ingresos() -> list[str]:
 def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str]) -> None:
     pass
 
-def scanear_codigo_qr(entry_id_qr: Entry,frame_lista_peliculas: LabelFrame, ingresos: list[str]) -> None:
+def obtener_id_qr_desde_qr(data: str) -> str:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se devolvera un string con el id del QR.
+    '''
     pass
+
+def scanear_codigo_qr(entry_id_qr: Entry,frame_lista_peliculas: LabelFrame, ingresos: list[str]) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se abrira la camara para leer el QR y se llenara el text con el id del QR.
+    '''
+    entry_id_qr.delete(0, 'end')
+
+    captura = cv2.VideoCapture(0)
+    datos_capturados: bool = False
+    id_qr: str = ''
+
+    while not datos_capturados:
+        ret, frame = captura.read()
+
+        qrDetecto = cv2.QRCodeDetector()
+
+        qr_data, bbox, rectifiedImage = qrDetecto.detectAndDecode(frame) 
+
+        if cv2.waitKey(1) == ord('s'):
+            break
+
+        if len(qr_data):
+            cv2.imshow('webCam', rectifiedImage)
+            id_qr = obtener_id_qr_desde_qr(qr_data)
+            datos_capturados = True
+        else:
+            cv2.imshow('webCam', frame)
+    
+    captura.release()
+    cv2.destroyAllWindows()
+
+    entry_id_qr.insert(0, id_qr)
+    cargar_qr(entry_id_qr, frame_lista_peliculas, ingresos)
 
 def main() -> None:
     '''
