@@ -127,6 +127,96 @@ def agregar_al_carrito(totem: dict, cantidad_entradas: Spinbox = None, snack: st
         else:
             spin_cantidad_snacks['bg'] = 'white'
 
+def volver_a_principal(pantalla_actual, totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Escondemos la pantalla actual y mostramos la pantalla principal.
+    '''
+    pantalla_actual.withdraw()
+
+    pantalla_principal = totem['ventanas']['pantalla_principal']
+
+    pantalla_principal.deiconify()
+
+
+def volver_a_pantalla_secundaria(pantalla_actual, totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Escondemos la pantalla actual y mostramos la pantalla secundaria.
+    '''
+    pantalla_actual.withdraw()
+
+    pantalla_secundaria = totem['ventanas']['pantalla_secundaria']
+
+    bnt_listo: Button = Button(pantalla_secundaria, text='Listo!', bg='green', command= lambda: volver_a_principal(pantalla_secundaria, totem))
+    bnt_listo.pack()
+
+    pantalla_secundaria.deiconify()
+
+def mostrar_pantalla_reserva(totem: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Escondemos la pantalla secundaria y mostramos la pantalla reserva con sus componentes pintados. Se actualiza el estado de la compra.
+    '''
+    pantalla_secundaria = totem['ventanas']['pantalla_secundaria']
+    pantalla_secundaria.withdraw()
+
+    precio_entradas = totem['precio_entradas_general']
+    compra = totem['compra']
+    
+    reiniciar_compra(compra)
+
+    compra['precio_entrada'] = precio_entradas
+    compra['ubicacion'] = totem['ubicacion']
+
+    pantalla_reserva = Toplevel()
+    pantalla_reserva.title('RESERVA')
+    pantalla_reserva.geometry('380x350')
+
+    totem['ventanas']['pantalla_reserva'] = pantalla_reserva
+
+    lbl_precio_entrada: Label = Label(pantalla_reserva, text=f'Precio unitario ${precio_entradas}')
+    lbl_precio_entrada.grid(row=0, column=1)
+
+    lbl_cantidad_entradas = Label(pantalla_reserva, text="Cantidad de entradas")
+    lbl_cantidad_entradas.grid(row=1, column=0)
+
+    spin_cantidad_entradas = Spinbox(pantalla_reserva, from_=1, to=MAX_ENTRADAS, validate='key', width=5)
+    spin_cantidad_entradas['validatecommand'] = (spin_cantidad_entradas.register(isNumber), '%P')
+    spin_cantidad_entradas.config(command= lambda: spinbox_fondo_blanco(spin_cantidad_entradas))
+    spin_cantidad_entradas.grid(row=1, column=1)
+
+    btn_agregar_al_carrito: Button = Button(pantalla_reserva, text='Agregar al carrito', command= lambda:agregar_al_carrito(totem, cantidad_entradas=spin_cantidad_entradas, lbl_mas_info=lbl_mas_info))
+    btn_agregar_al_carrito.grid(row=1, column=2)
+    
+    lblframe_lista_snacks: LabelFrame = LabelFrame(pantalla_reserva, text='Snacks')
+    lblframe_lista_snacks.grid(row=4, columnspan=3)
+
+    btn_agregar_snacks: Button = Button(pantalla_reserva, text='Agregar Snacks', command=lambda:mostrar_snacks(lblframe_lista_snacks, totem))
+    btn_agregar_snacks.grid(row=3, column=1)
+
+    lbl_mas_info = Label(pantalla_reserva, text="")
+    lbl_mas_info.grid_forget()
+
+    bnt_listo: Button = Button(pantalla_reserva, text='Listo!', bg='green', command= lambda: volver_a_pantalla_secundaria(pantalla_reserva, totem))
+    bnt_listo.grid(column=1)
+
+    pantalla_reserva.protocol("WM_DELETE_WINDOW", lambda: terminar_aplicacion(totem))
+
+
+def reiniciar_compra(compra: dict) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Reniciamos el estado de la compra.
+    '''
+    compra_cpy = compra.copy()
+
+    compra.clear()
+
+    compra['cantidad_entradas'] = 0
+    compra['snacks'] = {}
+    compra['ubicacion'] = ''
+    compra['pelicula'] = compra_cpy['pelicula']
 
 
 def isNumber(age_spinbox: Spinbox) -> bool:
