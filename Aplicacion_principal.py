@@ -84,6 +84,49 @@ def hay_asientos_disponibles(cantidad_entradas: int, totem: dict) -> bool:
 
     return True
 
+def spinbox_fondo_blanco(spin_box: Spinbox) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Pinta de blanco el fondo del SpinBox.
+    '''  
+    spin_box['bg'] = 'white'
+
+
+def agregar_al_carrito(totem: dict, cantidad_entradas: Spinbox = None, snack: str = '', spin_cantidad_snacks: Spinbox = None, lbl_mas_info: Label = None) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Actualiza el estado de la compra. En caso de cantidad de entradas valida la cantidad contra lugares disponibles.
+    '''      
+    compra = totem['compra']
+
+    if cantidad_entradas:
+        cant_entradas: int = int(cantidad_entradas.get())
+
+        if not hay_asientos_disponibles(cant_entradas, totem):
+            lugares_disponibles: int = int(totem['lugares_disponibles'][f'{totem["ubicacion"]}_{compra["pelicula"]}'])
+
+            cantidad_entradas['bg'] = 'red' 
+
+            lbl_mas_info.config(text=f'Quedan {lugares_disponibles} lugares disponibles.', bg='red')
+            lbl_mas_info.grid(column=1)
+        else:
+            if cant_entradas > MAX_ENTRADAS:
+                cantidad_entradas['bg'] = 'red'      
+            else:
+                compra['cantidad_entradas'] = cant_entradas
+                cantidad_entradas['bg'] = 'green'
+                lbl_mas_info.grid_forget()
+
+    elif snack:
+        cantidad_snack: int = int(spin_cantidad_snacks.get())
+
+        if cantidad_snack:
+            snacks = totem['SNACKS']
+            compra['snacks'][snack] = {'cantidad': cantidad_snack, 'precio_unidad': snacks[snack] }
+            spin_cantidad_snacks['bg'] = 'green'
+        else:
+            spin_cantidad_snacks['bg'] = 'white'
+
 
 
 def isNumber(age_spinbox: Spinbox) -> bool:
