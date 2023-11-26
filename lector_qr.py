@@ -4,7 +4,7 @@ import cv2
 
 CARPETA_CODIGOS_QR = 'QR'
 ARCHIVO_INGRESOS = 'ingresos.txt'
-
+QR_INVALIDO = 'QR_ID INVALIDO'
 
 def obtener_id_qr(cadena: str) -> str:
     '''
@@ -33,6 +33,10 @@ def cargar_ingresos() -> list[str]:
     return ingresados
 
 def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str]) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se limpiara la pantalla y luego se mostraran los datos del id del QR ingresado.
+    '''
     pass
 
 def obtener_id_qr_desde_qr(data: str) -> str:
@@ -40,7 +44,16 @@ def obtener_id_qr_desde_qr(data: str) -> str:
     PRE: Se esperan los parametros solicitado de forma correcta.
     POST: Se devolvera un string con el id del QR.
     '''
-    pass
+    id_qr: str = ''
+
+    if 'id_qr' not in data:
+        return QR_INVALIDO
+
+    id_qr = data.split('\n')[0]
+    id_qr = id_qr.replace(' ', '')
+    id_qr = id_qr.split(':')[1]
+
+    return id_qr
 
 def scanear_codigo_qr(entry_id_qr: Entry,frame_lista_peliculas: LabelFrame, ingresos: list[str]) -> None:
     '''
