@@ -1,4 +1,5 @@
 from tkinter import Tk, Entry, Button, Label, LabelFrame
+
 import os
 import cv2
 
@@ -12,6 +13,13 @@ def obtener_id_qr(cadena: str) -> str:
     POST: Se devolvera una cadena la cual es el id del qr.
     '''
     return cadena.split(',')[0].replace('id_qr: ', '')
+
+def guardar_ingreso_en_archivo(ingreso: str) -> bool:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se devolvera un boolean el cual es True si el guardado fue exitoso y False en caso contrario.
+    '''
+    pass
 
 def cargar_ingresos() -> list[str]:
     '''
@@ -37,7 +45,42 @@ def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str
     PRE: Se esperan los parametros solicitado de forma correcta.
     POST: Se limpiara la pantalla y luego se mostraran los datos del id del QR ingresado.
     '''
-    pass
+
+    for hijo in frame_datos_qr.winfo_children():
+        hijo.destroy()
+
+    id_qr: str = str(entry_id_qr.get())
+    path_qr: str = os.path.join(CARPETA_CODIGOS_QR, f'{id_qr}.png')
+
+    if os.path.exists(path_qr):
+        imagen_codigo_qr = cv2.imread(path_qr)
+        detector = cv2.QRCodeDetector()
+
+        valor = detector.detectAndDecode(imagen_codigo_qr)
+        ingreso: str = ''
+
+        for line in valor[0].splitlines():
+            lbl_id_qr: Label = Label(frame_datos_qr, text=line.replace('_', ' ').title())
+            lbl_id_qr.grid()
+
+            if 'ubicacion_totem' not in line:
+                ingreso += line +','
+
+        if id_qr not in ingresos:
+            if guardar_ingreso_en_archivo(ingreso):
+                ingresos.append(id_qr)
+
+                lbl_ingreso_invalido: Label = Label(frame_datos_qr, text=f'Qr {id_qr} ingresado', bg='green')
+                lbl_ingreso_invalido.grid()
+            else:
+                lbl_ingreso_invalido: Label = Label(frame_datos_qr, text=f'No se pudo guardar el ingreso con Qr {id_qr}', bg='red')
+                lbl_ingreso_invalido.grid()  
+        else:
+            lbl_ingreso_invalido: Label = Label(frame_datos_qr, text=f'Qr {id_qr} ya ingresado', bg='red')
+            lbl_ingreso_invalido.grid()
+    else:
+        lbl_no_encontrado: Label = Label(frame_datos_qr, text=f'Qr {id_qr} no encontrado', bg='red')
+        lbl_no_encontrado.grid()
 
 def obtener_id_qr_desde_qr(data: str) -> str:
     '''
