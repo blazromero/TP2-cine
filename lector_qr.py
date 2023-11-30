@@ -1,7 +1,12 @@
 from tkinter import Tk, Entry, Button, Label, LabelFrame
-
-import os
+import fitz
 import cv2
+import numpy as np
+from io import BytesIO
+from PIL import Image
+
+import cv2
+import os
 
 CARPETA_CODIGOS_QR = 'QR'
 ARCHIVO_INGRESOS = 'ingresos.txt'
@@ -48,6 +53,35 @@ def cargar_ingresos() -> list[str]:
 
     return ingresados
 
+def decodificar_pdf(ruta_pdf: str) -> str:
+    '''
+    PRE: Se esperan la ruta del archivo pdf de forma correcta.
+    POST: Se devolvera los datos del qr como string.
+    '''
+
+    qr_pdf = fitz.open(ruta_pdf)
+
+    pagina = qr_pdf.load_page(0)
+    qr_imagen = pagina.get_pixmap()
+
+    qr_imagen_pil = Image.frombytes("RGB", [qr_imagen.width, qr_imagen.height], qr_imagen.samples)
+
+    imagen_bytesio = BytesIO()
+    qr_imagen_pil.save(imagen_bytesio, format='PNG')
+    imagen_bytesio.seek(0)
+    
+    imagen_np = np.array(Image.open(imagen_bytesio))
+
+    imagen_gris = cv2.cvtColor(imagen_np, cv2.COLOR_RGB2GRAY)
+
+    detector = cv2.QRCodeDetector()
+
+    valor = detector.detectAndDecodeMulti(imagen_gris)
+
+    qr_pdf.close()
+
+    return valor[1][0]
+
 def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str]) -> None:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
@@ -58,19 +92,16 @@ def cargar_qr(entry_id_qr: Entry, frame_datos_qr: LabelFrame, ingresos: list[str
         hijo.destroy()
 
     id_qr: str = str(entry_id_qr.get())
-    path_qr: str = os.path.join(CARPETA_CODIGOS_QR, f'{id_qr}.png')
+
+    path_qr: str = os.path.join(CARPETA_CODIGOS_QR, f'{id_qr}.pdf')
 
     if os.path.exists(path_qr):
-        imagen_codigo_qr = cv2.imread(path_qr)
-        detector = cv2.QRCodeDetector()
-
-        valor = detector.detectAndDecode(imagen_codigo_qr)
-        ingreso: str = ''
-
-        for line in valor[0].splitlines():
+        data = decodificar_pdf(path_qr)
+        ingreso: str = ""
+        
+        for line in data.splitlines():
             lbl_id_qr: Label = Label(frame_datos_qr, text=line.replace('_', ' ').title())
             lbl_id_qr.grid()
-
             if 'ubicacion_totem' not in line:
                 ingreso += line +','
 
