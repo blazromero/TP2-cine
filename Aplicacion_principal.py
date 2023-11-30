@@ -564,10 +564,10 @@ def mostrar_pelis_de_cinema(frame_lista_peliculas: Frame, ubicacion_cine: str, t
     PRE: Se esperan los parametros solicitado de forma correcta.
     POST: Se limpa el listado pintado de peliculas y se mostraran todas las pelicula de la ubicacion elegida. Si resulta de una busqueda se mostrara la que coincide con el nombre buscado en esa ubicacion (sala).
     '''
-    print('antes', frame_lista_peliculas.winfo_children())
+
     for hijo in frame_lista_peliculas.winfo_children():
         hijo.destroy()
-    print('despues', frame_lista_peliculas.winfo_children())
+
     totem['ubicacion'] = ubicacion_cine
     
     peliculas: list[dict] = []
