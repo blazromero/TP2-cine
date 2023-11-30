@@ -289,7 +289,7 @@ def mostrar_pantalla_secundaria(pelicula, totem)-> None:
     lblframe_synopsis: LabelFrame = LabelFrame(pantalla_secundaria, text='Synopsis:')
     lblframe_synopsis.pack()
 
-    lbl_synopsis: Label = Label(lblframe_synopsis, text=synopsis, wraplength=200')
+    lbl_synopsis: Label = Label (lblframe_synopsis, text=synopsis, wraplength=200)
     lbl_synopsis.pack()
 
     lblframe_actores: LabelFrame = LabelFrame(pantalla_secundaria, text='Actores:')
@@ -311,7 +311,7 @@ def mostrar_pantalla_secundaria(pelicula, totem)-> None:
     lbl_duracion.pack()
 
     if hay_asientos_disponibles(MIN_ENTRADAS, totem):
-        btn_reservar: Button = Button(pantalla_secundaria, text='Reservar', command= lambda: mostrar_pantalla_reserva(totem)
+        btn_reservar: Button = Button(pantalla_secundaria, text='Reservar', command= lambda: mostrar_pantalla_reserva(totem))
         btn_reservar.pack()
     else:
         lbl_entradas_agotadas: Label = Label(pantalla_secundaria, text='Entradas agotadas.', bg='yellow',fg='black')
@@ -662,7 +662,7 @@ def main() -> None:
     pantalla_principal = Tk()
     pantalla_principal.geometry('800x1500')
     pantalla_principal.title('Pantalla Principal')
-    pantalla_principal.config(bg = 'black')
+    
 
     totem['ventanas']['pantalla_principal'] = pantalla_principal
 
