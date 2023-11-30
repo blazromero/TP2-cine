@@ -13,3 +13,6 @@ Estará el código de la segunda app, que es la que leera el codigo QR.
 
 ## opencv-python
 ``pip install opencv-python``
+
+## PyMuPDF
+``pip install PyMuPDF``
