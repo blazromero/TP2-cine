@@ -587,7 +587,7 @@ def mostrar_pelis_de_cinema(frame_lista_peliculas: Frame, ubicacion_cine: str, t
 
         poster_image = ImageTk.PhotoImage(poster_image)
 
-        btn: Button = Button(frame_lista_peliculas, image=poster_image, command = lambda pelicula=pelicula: mostrar_pantalla_secundaria(pelicula, totem) ) 
+        btn: Button = Button(frame_lista_peliculas, image=poster_image, command = lambda pelicula=pelicula: mostrar_pantalla_secundaria(pelicula, totem), bg= 'black' ) 
         btn.poster_image = poster_image
         
         btn.grid(row=int(fila + 1), column=int(columna), padx=10, pady=12)
