@@ -182,34 +182,34 @@ def mostrar_pantalla_reserva(totem: dict) -> None:
     pantalla_reserva = Toplevel()
     pantalla_reserva.title('RESERVA')
     pantalla_reserva.geometry('380x350')
-    pantalla_reserva.config(bg='black')
+    
 
     totem['ventanas']['pantalla_reserva'] = pantalla_reserva
 
-    lbl_precio_entrada: Label = Label(pantalla_reserva, text=f'Precio unitario ${precio_entradas}', bg='black', fg='white')
+    lbl_precio_entrada: Label = Label(pantalla_reserva, text=f'Precio unitario ${precio_entradas}')
     lbl_precio_entrada.grid(row=0, column=1)
 
-    lbl_cantidad_entradas = Label(pantalla_reserva, text="Cantidad de entradas", bg='black', fg='white')
+    lbl_cantidad_entradas = Label(pantalla_reserva, text="Cantidad de entradas")
     lbl_cantidad_entradas.grid(row=1, column=0)
 
-    spin_cantidad_entradas = Spinbox(pantalla_reserva, from_=1, to=MAX_ENTRADAS, validate='key', width=5, bg='black', fg='white')
+    spin_cantidad_entradas = Spinbox(pantalla_reserva, from_=1, to=MAX_ENTRADAS, validate='key', width=5)
     spin_cantidad_entradas['validatecommand'] = (spin_cantidad_entradas.register(isNumber), '%P')
     spin_cantidad_entradas.config(command= lambda: spinbox_fondo_blanco(spin_cantidad_entradas))
     spin_cantidad_entradas.grid(row=1, column=1)
 
-    btn_agregar_al_carrito: Button = Button(pantalla_reserva, text='Agregar al carrito', command= lambda:agregar_al_carrito(totem, cantidad_entradas=spin_cantidad_entradas, lbl_mas_info=lbl_mas_info), bg='black', fg='white')
+    btn_agregar_al_carrito: Button = Button(pantalla_reserva, text='Agregar al carrito', command= lambda:agregar_al_carrito(totem, cantidad_entradas=spin_cantidad_entradas, lbl_mas_info=lbl_mas_info))
     btn_agregar_al_carrito.grid(row=1, column=2)
     
-    lblframe_lista_snacks: LabelFrame = LabelFrame(pantalla_reserva, text='Snacks', bg='black', fg='white')
+    lblframe_lista_snacks: LabelFrame = LabelFrame(pantalla_reserva, text='Snacks')
     lblframe_lista_snacks.grid(row=4, columnspan=3)
 
-    btn_agregar_snacks: Button = Button(pantalla_reserva, text='Agregar Snacks', command=lambda:mostrar_snacks(lblframe_lista_snacks, totem), bg='black', fg='white')
+    btn_agregar_snacks: Button = Button(pantalla_reserva, text='Agregar Snacks', command=lambda:mostrar_snacks(lblframe_lista_snacks, totem))
     btn_agregar_snacks.grid(row=3, column=1)
 
-    lbl_mas_info = Label(pantalla_reserva, text="", bg='black', fg='white')
+    lbl_mas_info = Label(pantalla_reserva, text="")
     lbl_mas_info.grid_forget()
 
-    bnt_listo: Button = Button(pantalla_reserva, text='Listo!', bg='green', command= lambda: volver_a_pantalla_secundaria(pantalla_reserva, totem), fg='white')
+    bnt_listo: Button = Button(pantalla_reserva, text='Listo!', bg='green', command= lambda: volver_a_pantalla_secundaria(pantalla_reserva, totem))
     bnt_listo.grid(column=1)
 
     pantalla_reserva.protocol("WM_DELETE_WINDOW", lambda: terminar_aplicacion(totem))
@@ -241,6 +241,19 @@ def isNumber(age_spinbox: Spinbox) -> bool:
 
 
 
+def obtener_ubicacion_cines(totem: dict) -> list[str]:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se devolvera una lista de string, las cuales son las ubicaciones de los cines.
+    '''
+    cines: dict = totem['CINES_INFO']
+    ubicaciones: list[str] = []
+
+    for key, value in cines.items():
+        ubicaciones.append(value['location'])
+
+
+
 def mostrar_pantalla_secundaria(pelicula, totem)-> None:
 
     pantalla_principal = totem['ventanas']['pantalla_principal'] 
@@ -260,111 +273,95 @@ def mostrar_pantalla_secundaria(pelicula, totem)-> None:
     pantalla_secundaria = Toplevel()
     pantalla_secundaria.geometry('400x800')
     pantalla_secundaria.title('Pelicula')
-    pantalla_secundaria.config(bg='black')
+    
 
     totem['ventanas']['pantalla_secundaria'] = pantalla_secundaria
     
     btn_volver: Button = Button(pantalla_secundaria, text='Volver a pantalla principal', command= lambda:volver_a_principal(pantalla_secundaria, totem))
     btn_volver.pack()
 
-    lblframe_nombre_peli: LabelFrame = LabelFrame(pantalla_secundaria, text='Pelicula:', bg='black', fg='white')
+    lblframe_nombre_peli: LabelFrame = LabelFrame(pantalla_secundaria, text='Pelicula:')
     lblframe_nombre_peli.pack()
     
-    lbl_nombre_peli: Label = Label(lblframe_nombre_peli, text=nombre_pelicula, bg='black', fg='white')
+    lbl_nombre_peli: Label = Label(lblframe_nombre_peli, text=nombre_pelicula,)
     lbl_nombre_peli.pack()
 
-    lblframe_synopsis: LabelFrame = LabelFrame(pantalla_secundaria, text='Synopsis:', bg='black', fg='white')
+    lblframe_synopsis: LabelFrame = LabelFrame(pantalla_secundaria, text='Synopsis:')
     lblframe_synopsis.pack()
 
-    lbl_synopsis: Label = Label(lblframe_synopsis, text=synopsis, wraplength=200, bg='black', fg='white')
+    lbl_synopsis: Label = Label(lblframe_synopsis, text=synopsis, wraplength=200')
     lbl_synopsis.pack()
 
-    lblframe_actores: LabelFrame = LabelFrame(pantalla_secundaria, text='Actores:', bg='black', fg='white')
+    lblframe_actores: LabelFrame = LabelFrame(pantalla_secundaria, text='Actores:')
     lblframe_actores.pack()
 
-    lbl_actores: Label = Label(lblframe_actores, text=actores, wraplength=200, bg='black', fg='white')
+    lbl_actores: Label = Label(lblframe_actores, text=actores, wraplength=200)
     lbl_actores.pack()
 
-    lblframe_genero: LabelFrame = LabelFrame(pantalla_secundaria, text='Genero:', bg='black', fg='white')
+    lblframe_genero: LabelFrame = LabelFrame(pantalla_secundaria, text='Genero:')
     lblframe_genero.pack()
 
-    lbl_genero: Label = Label(lblframe_genero, text=genero, bg='black', fg='white')
+    lbl_genero: Label = Label(lblframe_genero, text=genero)
     lbl_genero.pack()
 
-    lblframe_duracion: LabelFrame = LabelFrame(pantalla_secundaria, text='Duracion:', bg='black', fg='white')
+    lblframe_duracion: LabelFrame = LabelFrame(pantalla_secundaria, text='Duracion:')
     lblframe_duracion.pack()
 
-    lbl_duracion: Label = Label(lblframe_duracion, text=duracion, bg='black', fg='white')
+    lbl_duracion: Label = Label(lblframe_duracion, text=duracion)
     lbl_duracion.pack()
 
     if hay_asientos_disponibles(MIN_ENTRADAS, totem):
-        btn_reservar: Button = Button(pantalla_secundaria, text='Reservar', command= lambda: mostrar_pantalla_reserva(totem), bg='black', fg='white')
+        btn_reservar: Button = Button(pantalla_secundaria, text='Reservar', command= lambda: mostrar_pantalla_reserva(totem)
         btn_reservar.pack()
     else:
         lbl_entradas_agotadas: Label = Label(pantalla_secundaria, text='Entradas agotadas.', bg='yellow',fg='black')
         lbl_entradas_agotadas.pack()
 
-    pantalla_secundaria.protocol("WM_DELETE_WINDOW", lambda: terminar_aplicacion(totem), bg='black', fg='white')
+    pantalla_secundaria.protocol("WM_DELETE_WINDOW", lambda: terminar_aplicacion(totem))
 
 
 
 def diseño_pantalla_principal(totem)-> dict:
-    
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se pintara la pantalla principal con sus componentes. Ubicacion a elegir, listados de peliculas y buscar.
+    '''
     pantalla_principal = totem['ventanas']['pantalla_principal']
-    
-    lbl_cines = Label(text = 'Cine : ', bg= 'black', fg= 'white' )
-    lbl_cines.grid(row=0, column=1)
-    
-    lbl_pelicula = Label(text = 'Buscar peli: ', bg= 'black', fg= 'white' )
-    lbl_pelicula.grid(row=1, column=1)
-    
 
-    lbl_espacios = Label(text='   adsdsadss           ', bg= 'black')
-    lbl_espacios.grid(row=3, column=0)
-    lbl_espacios1 = Label(text='as ', bg= 'black')
-    lbl_espacios1.grid(row=4, column=0)
-    lbl_espacios2 = Label(text='s', bg= 'black')
-    lbl_espacios2.grid(row=5, column=0)
-    lbl_espacios3 = Label(text='sa', bg= 'black')
-    lbl_espacios3.grid(row=6, column=0)
-    
-    boton_1 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_1.grid(row= 3, column= 2,pady= 5, padx= 5)
 
-    boton_2 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_2.grid(row= 4, column= 2,pady= 5, padx= 5)
+    lbl_totem_ubicacion: Label = Label(pantalla_principal, text='Ubicacion:', pady=10)
+    lbl_totem_ubicacion.grid(row=0, column=0)
 
-    boton_3 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_3.grid(row= 5, column= 3,pady= 5, padx= 5)
 
-    boton_4 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_4.grid(row= 6, column= 3, pady= 5, padx= 5)
+    cine_ubicaciones = obtener_ubicacion_cines(totem)
+    valor_option: StringVar = StringVar()
+    valor_option.set(cine_ubicaciones[0])
 
-    boton_5 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_5.grid(row= 3, column= 3,pady= 5, padx= 5)
+    frame_lista_peliculas: Frame = Frame(pantalla_principal)
+    opcion_ubicacion: OptionMenu = OptionMenu(pantalla_principal, valor_option, *cine_ubicaciones, command=lambda valor_option=valor_option: mostrar_pelis_de_cinema(scrollable_frame_peliculas, valor_option, totem))
+    opcion_ubicacion.grid(row=0, column=1, columnspan=2, sticky='news', pady=10)
 
-    boton_6 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_6.grid(row= 4, column= 3,pady= 5, padx= 5)
+    lbl_buscar_peli: Label = Label(pantalla_principal, text='Buscar Peli:')
+    lbl_buscar_peli.grid(row=1, column=0)
 
-    boton_7 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_7.grid(row= 5, column= 2,pady= 5, padx= 5)
+    entry_pelicula: Entry = Entry(pantalla_principal)
+    entry_pelicula.grid(row=1, column=1)
 
-    boton_8 = Button(pantalla_principal, text= 'pelicula', command=lambda: mostrar_pantalla_secundaria(totem), height= 20 , width= 25)
-    boton_8.grid(row= 6, column= 2, pady= 5, padx= 5)
+    btn_buscar: Button = Button(pantalla_principal, text='Buscar', command= lambda: mostrar_peli_buscada(scrollable_frame_peliculas, entry_pelicula, totem, valor_option.get()))
+    btn_buscar.grid(row=1, column=2)
 
-    boton_buscar: Button = Button(text='buscar', height= 1, width=6)
-    boton_buscar.grid(row=1, column=3)
-
-    boton_buscar: Button = Button(text='Finalizar Compra', height= 1, width=15)
-    boton_buscar.grid(row=1, column=4)
-
+    btn_buscar: Button = Button(pantalla_principal, text='Checkout/Finalizar compra')
+    btn_buscar.grid(row=1, column=3)
 
     lbl_aclaracion: Label = Label(pantalla_principal, text=ACLARACION_FUNCIONES_PELICULAS, wraplength=200, bg='CadetBlue', font=ACLARACION_FONT)
-    lbl_aclaracion.grid(row=2, column=2, columnspan=2, sticky='news', pady=20)
-    entrada_usuario = Entry(pantalla_principal, width= 25)
-    entrada_usuario.grid(row=1, column=2)
+    lbl_aclaracion.grid(row=2, column=1, columnspan=2, sticky='news', pady=20)
 
-    
+    frame_lista_peliculas.grid(row=3, columnspan=4)
+
+    scrollable_frame_peliculas = meter_scroll_en_frame(frame_lista_peliculas)
+    mostrar_pelis_de_cinema(scrollable_frame_peliculas, valor_option.get(), totem)
+
+
 
 def obtener_id_cinema(ubicacion_cine_elegido: str, totem: dict) -> str:
     '''
@@ -553,6 +550,7 @@ def obtener_pelis_de_cinema(cine_elegido: str, totem: dict) -> list[dict]:
     return peliculas_del_cine
 
 
+
 def mostrar_pelis_de_cinema(frame_lista_peliculas: Frame, ubicacion_cine: str, totem: dict, peliculas_busqueda: list[dict] = []) -> None:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
@@ -581,7 +579,7 @@ def mostrar_pelis_de_cinema(frame_lista_peliculas: Frame, ubicacion_cine: str, t
         columna = i % num_peliculas_por_fila
         poster_image = ImageTk.PhotoImage(poster_image)
 
-        btn: Button = Button(frame_lista_peliculas, image=poster_image, command = lambda pelicula=pelicula: mostrar_pantalla_secundaria(pelicula, totem) ) 
+        btn: Button = Button(frame_lista_peliculas, image=poster_image, command = lambda pelicula=pelicula: mostrar_pantalla_secundaria(pelicula, totem), bg='black' ) 
         btn.poster_image = poster_image
         
         btn.grid(row=int(fila + 1), column=int(columna), padx=10, pady=12)
@@ -590,7 +588,55 @@ def mostrar_pelis_de_cinema(frame_lista_peliculas: Frame, ubicacion_cine: str, t
 
 
 
+def mostrar_peli_buscada(frame_lista_peliculas: Frame, pelicula: Entry, totem: dict, ubicacion_elejida: str) -> None:
+    '''
+    PRE: Se esperan los parametros solicitado de forma correcta.
+    POST: Se limpa el listado pintado de peliculas y se mostrara la pelicula que coincide con el nombre buscado.
+    '''
+    for hijo in frame_lista_peliculas.winfo_children():
+        hijo.destroy()
+
+    peli_a_buscar: str = pelicula.get().lower()
+
+    if not len(peli_a_buscar):
+        mostrar_pelis_de_cinema(frame_lista_peliculas, ubicacion_elejida, totem)
+    else:
+        peliculas = totem['CARTELERA_INFO']
+        cine_id: str = obtener_id_cinema(ubicacion_elejida, totem)
+
+        resultado: list[dict] = []
+
+        for peli_id, peli_info in peliculas.items():
+            pelis_name_splited: list = (peli_info['name']).lower().split(' ')
+
+            for peli_mame in pelis_name_splited:
+                if peli_a_buscar in peli_mame:
+                    cines_ids: list[str] = peli_info['cinemas']
+
+                    if cine_id in cines_ids:
+                        resultado.append(peli_info)
         
+        if len(resultado):
+            mostrar_pelis_de_cinema(frame_lista_peliculas, ubicacion_elejida, totem, resultado)
+
+
+
+def meter_scroll_en_frame(frame_lista_peliculas) -> None:
+    my_canvas = Canvas(frame_lista_peliculas, width=500, height=800)
+    my_scrollbar = Scrollbar(frame_lista_peliculas, orient='vertical', command=my_canvas.yview)
+    scrollable_frame_peliculas = Frame(my_canvas)
+
+    my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox('all')))
+    my_canvas.create_window((0,0), window=scrollable_frame_peliculas)
+    my_canvas.configure(yscrollcommand=my_scrollbar.set)
+    my_canvas.grid(row=0, column=0, sticky='news')
+
+    my_scrollbar.grid(row=0, column=1, sticky='ns')
+
+    return scrollable_frame_peliculas
+
+
+
 def terminar_aplicacion(totem: dict) -> None:
     '''
     PRE: Se esperan los parametros solicitado de forma correcta.
