@@ -19,7 +19,15 @@ def guardar_ingreso_en_archivo(ingreso: str) -> bool:
     PRE: Se esperan los parametros solicitado de forma correcta.
     POST: Se devolvera un boolean el cual es True si el guardado fue exitoso y False en caso contrario.
     '''
-    pass
+    try:
+        with open(ARCHIVO_INGRESOS, 'a') as archivo:
+            archivo.write(ingreso[:-1] + '\n')
+
+        return True
+    except Exception as e:
+        print('Error:', str(e))
+
+        return False
 
 def cargar_ingresos() -> list[str]:
     '''
